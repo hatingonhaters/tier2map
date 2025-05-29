@@ -1,5 +1,5 @@
 
-fetch('data.json')
+fetch('map_data.json')
   .then(response => response.json())
   .then(data => {
     const map = L.map('map').setView([39.8283, -98.5795], 4);
