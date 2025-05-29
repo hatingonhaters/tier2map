@@ -23,45 +23,26 @@ fetch('data.json')
       }
     }
 
-    function getLegendColor(classification) {
-      return '<i style="background:' + getColor(classification) + ';width:18px;height:18px;display:inline-block;margin-right:8px;"></i>' + classification;
-    }
-
     data.forEach(school => {
-      const marker = L.circleMarker([school.Latitude, school.Longitude], {
+      const marker = L.circleMarker([school.lat, school.lon], {
         radius: 6,
-        fillColor: getColor(school.Classification),
+        fillColor: getColor(school.classification),
         color: "#000",
         weight: 0.5,
         opacity: 1,
-        fillOpacity: 0.8
+        fillOpacity: 0.85
       }).addTo(map);
 
-      const popup = `
-        <strong>${school.University}</strong><br>
-        Rank: ${school.Rank}<br>
-        Classification: ${school.Classification}<br><br>
-        CSI Percentile: ${(school.CSI * 100).toFixed(2)}%<br>
-        Academic Efficiency: <a href="#" onclick="alert('Upgrade your subscription to view full academic efficiency details.'); return false;">${(school.AcademicEfficiency * 100).toFixed(2)}%</a><br>
-        Market Saturation: <a href="#" onclick="alert('Upgrade your subscription to view full market saturation details.'); return false;">${(school.MarketSaturation * 100).toFixed(2)}%</a><br>
-        aCFI: <a href="#" onclick="alert('Upgrade your subscription to view full financial data (aCFI).'); return false;">${(school.aCFI * 100).toFixed(2)}%</a><br><br>
-        CSI is calculated using:<br>
-        Financial Health (40.02%)<br>
-        Market Saturation (39.99%)<br>
-        Academic Efficiency (19.99%)<br><br>
-        <em>Data compiled April 2025.</em>
-      `;
-
-      marker.bindPopup(popup);
+      marker.bindPopup(school.popup);
     });
 
-    const legend = L.control({ position: 'bottomleft' });
+    const legend = L.control({ position: 'bottomright' });
     legend.onAdd = function () {
-      const div = L.DomUtil.create('div', 'legend');
-      const grades = ["Critical", "Severe Risk", "Fragile", "Concern", "Watchlist", "Stable", "Strong", "Elite"];
-      div.innerHTML += '<strong>CSI Classification</strong><br>';
-      grades.forEach(g => {
-        div.innerHTML += getLegendColor(g) + '<br>';
+      const div = L.DomUtil.create('div', 'info legend');
+      const categories = ["Critical", "Severe Risk", "Fragile", "Concern", "Watchlist", "Stable", "Strong", "Elite"];
+      div.innerHTML = '<h4>CSI Classification</h4>';
+      categories.forEach(c => {
+        div.innerHTML += `<i style="background:${getColor(c)};width:18px;height:18px;display:inline-block;margin-right:6px;"></i>${c}<br>`;
       });
       return div;
     };
