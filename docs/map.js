@@ -11,15 +11,15 @@ fetch('map_data.json')
 
     function getColor(classification) {
       switch (classification) {
-        case "Critical": return "#b30000";
-        case "Severe Risk": return "#e34a33";
-        case "Fragile": return "#fc8d59";
-        case "Concern": return "#fdbb84";
-        case "Watchlist": return "#fdd49e";
-        case "Stable": return "#d9f0a3";
-        case "Strong": return "#a6d96a";
-        case "Elite": return "#1a9641";
-        default: return "#cccccc";
+        case "Critical": return "#a50026";
+        case "Terminal": return "#6e0000";
+        case "Fragile": return "#f46d43";
+        case "Concern": return "#d73027";
+        case "Watchlist": return "#fdae61";
+        case "Stable": return "#a6d96a";
+        case "Excellent": return "#66bd63";
+        case "Elite": return "#1a9850";
+        default: return "#999999";
       }
     }
 
@@ -39,7 +39,7 @@ fetch('map_data.json')
     const legend = L.control({ position: 'bottomright' });
     legend.onAdd = function () {
       const div = L.DomUtil.create('div', 'info legend');
-      const categories = ["Critical", "Severe Risk", "Fragile", "Concern", "Watchlist", "Stable", "Strong", "Elite"];
+      const categories = ["Critical", "Terminal", "Fragile", "Concern", "Watchlist", "Stable", "Excellent", "Elite"];
       div.innerHTML = '<h4>CSI Classification</h4>';
       categories.forEach(c => {
         div.innerHTML += `<i style="background:${getColor(c)};width:18px;height:18px;display:inline-block;margin-right:6px;"></i>${c}<br>`;
