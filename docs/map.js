@@ -9,24 +9,10 @@ fetch('map_data.json')
       attribution: '© OpenStreetMap'
     }).addTo(map);
 
-    function getColor(classification) {
-      switch (classification) {
-        case "Critical": return "#a50026";
-        case "Terminal": return "#6e0000";
-        case "Fragile": return "#f46d43";
-        case "Concern": return "#d73027";
-        case "Watchlist": return "#fdae61";
-        case "Stable": return "#a6d96a";
-        case "Excellent": return "#66bd63";
-        case "Elite": return "#1a9850";
-        default: return "#999999";
-      }
-    }
-
     data.forEach(school => {
       const marker = L.circleMarker([school.lat, school.lon], {
         radius: 6,
-        fillColor: getColor(school.classification),
+        fillColor: school.color,
         color: "#000",
         weight: 0.5,
         opacity: 1,
@@ -39,10 +25,19 @@ fetch('map_data.json')
     const legend = L.control({ position: 'bottomright' });
     legend.onAdd = function () {
       const div = L.DomUtil.create('div', 'info legend');
-      const categories = ["Critical", "Terminal", "Fragile", "Concern", "Watchlist", "Stable", "Excellent", "Elite"];
+      const categories = [
+        { label: "Critical", color: "#a50026" },
+        { label: "Terminal", color: "#6e0000" },
+        { label: "Fragile", color: "#f46d43" },
+        { label: "Concern", color: "#d73027" },
+        { label: "Watchlist", color: "#fdae61" },
+        { label: "Stable", color: "#a6d96a" },
+        { label: "Excellent", color: "#66bd63" },
+        { label: "Elite", color: "#1a9850" }
+      ];
       div.innerHTML = '<h4>CSI Classification</h4>';
       categories.forEach(c => {
-        div.innerHTML += `<i style="background:${getColor(c)};width:18px;height:18px;display:inline-block;margin-right:6px;"></i>${c}<br>`;
+        div.innerHTML += `<i style="background:${c.color};width:18px;height:18px;display:inline-block;margin-right:6px;"></i>${c.label}<br>`;
       });
       return div;
     };
