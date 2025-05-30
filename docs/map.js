@@ -4,32 +4,39 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 18,
 }).addTo(map);
 
-// Load external data
 fetch('data.json')
   .then(response => response.json())
   .then(data => {
     data.forEach(school => {
-      let color;
-      const percentile = school.percentile;
-
-      if (percentile >= 87.5) color = '#006400';       // Elite
-      else if (percentile >= 75) color = '#228B22';    // Strong
-      else if (percentile >= 62.5) color = '#66CDAA';  // Stable
-      else if (percentile >= 50) color = '#FFD700';    // Watchlist
-      else if (percentile >= 37.5) color = '#FFA500';  // Fragile
-      else if (percentile >= 25) color = '#FF8C00';    // Struggling
-      else if (percentile >= 12.5) color = '#FF4500';  // Distressed
-      else color = '#8B0000';                          // Critical
-
       const marker = L.circleMarker([school.lat, school.lon], {
         radius: 6,
-        fillColor: color,
+        fillColor: school.color,
         color: '#000',
         weight: 1,
         opacity: 1,
-        fillOpacity: 0.8
+        fillOpacity: 0.85
       }).addTo(map);
 
       marker.bindPopup(school.popup);
     });
   });
+
+// Add a legend
+var legend = L.control({ position: "bottomright" });
+
+legend.onAdd = function (map) {
+  var div = L.DomUtil.create("div", "info legend"),
+      grades = ["Critical", "Distressed", "Struggling", "Fragile", "Watchlist", "Stable", "Strong", "Elite"],
+      colors = ["#8B0000", "#FF4500", "#FF8C00", "#FFA500", "#FFD700", "#66CDAA", "#228B22", "#006400"];
+
+  div.innerHTML += '<h4>CSI Classification</h4>';
+  for (var i = 0; i < grades.length; i++) {
+    div.innerHTML +=
+      '<i style="background:' + colors[i] + '"></i> ' +
+      grades[i] + '<br>';
+  }
+
+  return div;
+};
+
+legend.addTo(map);
